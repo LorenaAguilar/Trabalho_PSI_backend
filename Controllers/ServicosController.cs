@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SSG_API.Data;
 using SSG_API.Domain;
 using SSG_API.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SSG_API.Controllers
 {
@@ -23,6 +22,7 @@ namespace SSG_API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<string>> Get()
         {
             var result = _applicationDbContext.Servicos.ToList<object>();
@@ -34,6 +34,7 @@ namespace SSG_API.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<object> Get(Guid id)
         {
             var result = _applicationDbContext.Servicos.Find(id);

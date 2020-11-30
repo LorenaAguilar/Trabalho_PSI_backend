@@ -11,10 +11,10 @@ namespace SSG_API.Domain
         public ServicoPrestado ServicoPrestado { get; set; }
 
         private DateTime _data;
-        public string DataPrestacao
+        public DateTime DataPrestacao
         {
-            get => string.Format("{0}/{1}/{2} {3}", _data.Day, _data.Month, _data.Year, _data.TimeOfDay);
-            set => _data = DateTime.Parse(value, CultureInfo.CreateSpecificCulture("pt-BR")); // formato: DD/MM/AAAA hh:mm:ss
+            get => _data;
+            set => _data = value;
         }
 
         private double _preco;

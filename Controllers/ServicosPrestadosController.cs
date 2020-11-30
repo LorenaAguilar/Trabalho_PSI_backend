@@ -25,23 +25,56 @@ namespace SSG_API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ServicoPrestado>> Get()
         {
-            var result = _applicationDbContext.ServicosPrestados.ToList<object>();
+            var servicosPrestados = from sp in _applicationDbContext.ServicosPrestados
+                                    select new {
+                                        Servico = sp.Servico.Id,
+                                        Prestador = sp.Prestador.Id,
+                                        Unidade = sp.Unidade.Id,
+                                        Preco = sp.Preco
+                                        };
+            
+            List<object> results = new List<object>();
+            
+            foreach (var item in servicosPrestados)
+            {
+                results.Add(
+                    new ServicoPrestadoModel
+                    {
+                        Servico = item.Servico,
+                        Prestador = item.Prestador,
+                        Unidade = item.Unidade,
+                        Preco = item.Preco
+                    }    
+                );
+            }
 
-            if(result.Any())
-                return Ok(result);
+            if (servicosPrestados.Any())
+                return Ok(results);
             else
                 return NoContent();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ServicoPrestado> Get(string id)
+        public ActionResult<ServicoPrestado> Get(Guid id)
         {
-            var result = _applicationDbContext.ServicosPrestados.Find(id);
+            var found = _applicationDbContext.ServicosPrestados.Find(id);
 
-            if(result != null)
+            if (found != null)
+            {
+                var result = new ServicoPrestadoModel()
+                {
+                    Servico = found.Servico.Id,
+                    Prestador = found.Prestador.Id,
+                    Preco = found.Preco,
+                    Unidade = found.Unidade.Id
+                };
+
                 return Ok(result);
-            else
-                return NotFound();
+            }
+
+
+
+            return NotFound();
         }
 
         [HttpPost]
@@ -56,7 +89,7 @@ namespace SSG_API.Controllers
                     Preco = servico.Preco
                 }).Entity;
             _applicationDbContext.SaveChanges();
-            
+
             return Ok(result);
         }
 

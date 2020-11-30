@@ -9,7 +9,7 @@
         public string Telefone { get; set; }
         public string LinkFoto { get; set; }
         public string Biografia { get; set; }
-        public string Tipo { get; set; }
+        public string Tipo { get { return Tipo.Trim().ToUpper(); } set { Tipo = value; } }
         public string Cpf { get; set; }
         //public string Avaliacao { get; set; }
 

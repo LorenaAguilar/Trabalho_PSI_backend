@@ -82,32 +82,32 @@ namespace SSG_API.Services
                         EmailConfirmed = true
                     }, "PrestadorExemplo01!", Roles.Prestador);
 
-                CreateUser(
-                    new ApplicationUser()
-                    {
-                        Id = "872C723E-828C-4873-988E-1E581C4E4CE9",
-                        UserName = "PrestadorExemplo1",
-                        Email = "prestadorexemplo@teste.com.br",
-                        EmailConfirmed = true
-                    }, "PrestadorExemplo02!", Roles.Prestador);
+                //CreateUser(
+                //    new ApplicationUser()
+                //    {
+                //        Id = "872C723E-828C-4873-988E-1E581C4E4CE9",
+                //        UserName = "PrestadorExemplo1",
+                //        Email = "prestadorexemplo@teste.com.br",
+                //        EmailConfirmed = true
+                //    }, "PrestadorExemplo02!", Roles.Prestador);
 
-                CreateUser(
-                    new ApplicationUser()
-                    {
-                        Id = "D541E30B-CBBC-4FD4-9538-9FFD59CF501D",
-                        UserName = "PrestadorExemplo2",
-                        Email = "prestadorexemplo@teste.com.br",
-                        EmailConfirmed = true
-                    }, "PrestadorExemplo03!", Roles.Prestador);
+                //CreateUser(
+                //    new ApplicationUser()
+                //    {
+                //        Id = "D541E30B-CBBC-4FD4-9538-9FFD59CF501D",
+                //        UserName = "PrestadorExemplo2",
+                //        Email = "prestadorexemplo@teste.com.br",
+                //        EmailConfirmed = true
+                //    }, "PrestadorExemplo03!", Roles.Prestador);
 
-                CreateUser(
-                    new ApplicationUser()
-                    {
-                        Id = "1D90D272-944A-44F1-AD2B-68ED7AA0C622",
-                        UserName = "PrestadorExemplo3",
-                        Email = "prestadorexemplo@teste.com.br",
-                        EmailConfirmed = true
-                    }, "PrestadorExemplo04!", Roles.Prestador);
+                //CreateUser(
+                //    new ApplicationUser()
+                //    {
+                //        Id = "1D90D272-944A-44F1-AD2B-68ED7AA0C622",
+                //        UserName = "PrestadorExemplo3",
+                //        Email = "prestadorexemplo@teste.com.br",
+                //        EmailConfirmed = true
+                //    }, "PrestadorExemplo04!", Roles.Prestador);
 
                 CreateUser(
                     new ApplicationUser()

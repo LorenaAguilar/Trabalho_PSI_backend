@@ -56,10 +56,12 @@ namespace SSG_API.Security
                     {
                         // Verifica se o usuário em questão possui
                         // a role Acesso-APIProdutos
-                        credenciaisValidas = _userManager.IsInRoleAsync(
-                            userIdentity, Roles.Admin).Result
-                            || _userManager.IsInRoleAsync(userIdentity, Roles.Cliente).Result
-                            || _userManager.IsInRoleAsync(userIdentity, Roles.Prestador).Result;
+                        //credenciaisValidas = _userManager.IsInRoleAsync(
+                        //    userIdentity, Roles.Admin).Result
+                        //    || _userManager.IsInRoleAsync(userIdentity, Roles.Cliente).Result
+                        //    || _userManager.IsInRoleAsync(userIdentity, Roles.Prestador).Result;
+
+                        credenciaisValidas = true;
                     }
                 }
             }
@@ -93,6 +95,7 @@ namespace SSG_API.Security
                         LinkFoto = user.LinkFoto,
                         NomeCompleto = user.NomeCompleto,
                         Telefone = user.Telefone,
+                        Cpf = user.Cpf
                     };
                 if (_userManager.FindByEmailAsync(user.Email.Trim().ToUpper()).Result == null)
                 {
@@ -101,7 +104,7 @@ namespace SSG_API.Security
                     {
                         var createdUser = _userManager.FindByEmailAsync(user.Email).Result;
 
-                        if (user.Tipo == "Prestador")
+                        if (user.Tipo == "PRESTADOR")
                         {
                             Prestador prestador = new Prestador
                             {
@@ -110,20 +113,23 @@ namespace SSG_API.Security
                                 Id = Guid.NewGuid()
                             };
 
-                            _userManager.AddToRoleAsync(createdUser, Roles.Prestador);
+                            var result = _userManager.AddToRoleAsync(createdUser, Roles.Prestador).Result;
 
+                            _identityDbContext.SaveChanges();
                             _applicationDbContext.Add<Prestador>(prestador);
                             _applicationDbContext.SaveChanges();
 
                             return "Succeeded";
                         }
-                        else if (user.Tipo == "Cliente")
+                        else if (user.Tipo == "CLIENTE")
                         {
                             Contratante contratante = new Contratante
                             {
                                 Id = Guid.NewGuid(),
                                 User = applicationUser
                             };
+
+                            var result = _userManager.AddToRoleAsync(createdUser, Roles.Cliente).Result;
 
                             _identityDbContext.SaveChanges();
                             _applicationDbContext.Add<Contratante>(contratante);
@@ -143,6 +149,44 @@ namespace SSG_API.Security
         }
 
         public Token GenerateToken(SignInUserModel user, ClaimsPrincipal claims)
+        {
+            ClaimsIdentity identity = new ClaimsIdentity(
+                new GenericIdentity(user.Email, "Login"),
+                new[] {
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+                        new Claim(JwtRegisteredClaimNames.UniqueName, user.Email)
+                }
+            );
+
+            DateTime dataCriacao = DateTime.Now;
+            DateTime dataExpiracao = dataCriacao +
+                TimeSpan.FromSeconds(_tokenConfigurations.Seconds);
+
+            var handler = new JwtSecurityTokenHandler();
+            var securityToken = handler.CreateToken(new SecurityTokenDescriptor
+            {
+                Issuer = _tokenConfigurations.Issuer,
+                Audience = _tokenConfigurations.Audience,
+                SigningCredentials = _signingConfigurations.SigningCredentials,
+                Subject = identity,
+                NotBefore = dataCriacao,
+                Expires = dataExpiracao
+            });
+            var token = handler.WriteToken(securityToken);
+
+
+            return new Token()
+            {
+                Authenticated = true,
+                Created = dataCriacao.ToString("yyyy-MM-dd HH:mm:ss"),
+                Expiration = dataExpiracao.ToString("yyyy-MM-dd HH:mm:ss"),
+                AccessToken = token,
+                Message = "OK",
+                Roles = _userManager.GetRolesAsync(_userManager.FindByNameAsync(user.Email).Result).Result.ToArray<String>()
+            };
+        }
+
+        public Token GenerateToken(ApplicationUser user)
         {
             ClaimsIdentity identity = new ClaimsIdentity(
                 new GenericIdentity(user.Email, "Login"),

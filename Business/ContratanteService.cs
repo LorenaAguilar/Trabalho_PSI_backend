@@ -7,22 +7,21 @@ using System.Linq;
 
 namespace SSG_API.Business
 {
-    public class PrestadorService
+    public class ContratanteService
     {
         private readonly ApplicationDbContext _applicationDbContext;
         
-        public PrestadorService(ApplicationDbContext applicationDbContext)
+        public ContratanteService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
 
         public object GetByEmail(string email)
         {
-            return from p in _applicationDbContext.Prestadores
+            return from p in _applicationDbContext.Contratantes
                    where p.User.NormalizedEmail == email.Trim().ToUpper()
                    select new { 
                        p.Id,
-                       p.Biografia,
                        p.User.Email,
                        p.User.NomeCompleto,
                        p.User.Telefone,
@@ -35,11 +34,10 @@ namespace SSG_API.Business
 
         public object GetById(Guid id)
         {
-            return from p in _applicationDbContext.Prestadores
+            return from p in _applicationDbContext.Contratantes
                    where p.Id == id
                    select new { 
                        p.Id,
-                       p.Biografia,
                        p.User.Email,
                        p.User.NomeCompleto,
                        p.User.Telefone,

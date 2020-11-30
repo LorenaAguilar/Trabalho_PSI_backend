@@ -10,13 +10,13 @@ namespace SSG_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize("Bearer")]
-    public class PrestadoresController : ControllerBase
+    public class ContratantesController : ControllerBase
     {
-        private readonly PrestadorService _prestadorService;
+        private readonly ContratanteService _contratanteService;
 
-        public PrestadoresController(PrestadorService prestadorService)
+        public ContratantesController(ContratanteService contratanteService)
         {
-            _prestadorService = prestadorService;
+            _contratanteService = contratanteService;
         }
 
         [HttpGet]
@@ -25,11 +25,11 @@ namespace SSG_API.Controllers
             object result = null;
 
             if (id != string.Empty)
-                result = _prestadorService.GetById(new Guid(id));
+                result = _contratanteService.GetById(new Guid(id));
             else if (email != string.Empty)
-                result = _prestadorService.GetByEmail(email);
+                result = _contratanteService.GetByEmail(email);
             else if (userName != null)
-                result = _prestadorService.GetByUserName(userName);
+                result = _contratanteService.GetByUserName(userName);
 
             if (result != null)
                 return Ok(result);

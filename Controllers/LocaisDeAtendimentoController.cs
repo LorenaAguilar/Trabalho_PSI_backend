@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SSG_API.Data;
 using SSG_API.Domain;
 using SSG_API.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,30 +28,40 @@ namespace SSG_API.Controllers
         {
             var result = _applicationDbContext.LocaisDeAtendimento.ToList<object>();
 
-            if(result.Any())
+            if (result.Any())
                 return Ok(result);
             else
                 return NoContent();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<string> Get(Guid id)
         {
-            var result = _applicationDbContext.LocaisDeAtendimento.ToList<object>();
+            var found = _applicationDbContext.LocaisDeAtendimento.Find(id);
 
-            if(result.Any())
+            if (found != null)
+            {
+                var result = new LocaisDeAtendimentoModel()
+                {
+                    Prestador = found.Prestador.Id,
+                    Cidade = found.Cidade,
+                    Estado = found.Estado
+                };
+                
                 return Ok(result);
-            else
-                return NoContent();
+            }
+
+            return NoContent();
         }
 
         [HttpPost]
         public ActionResult<object> Post([FromBody] LocaisDeAtendimentoModel value)
         {
             var result = _applicationDbContext.Add<LocaisDeAtendimento>(
-                new LocaisDeAtendimento(){
-                    Cidade=value.Cidade,
-                    Estado=value.Estado,
+                new LocaisDeAtendimento()
+                {
+                    Cidade = value.Cidade,
+                    Estado = value.Estado,
                     Prestador = _applicationDbContext.Find<Prestador>(value.Prestador)
                 }).Entity;
             _applicationDbContext.SaveChanges();

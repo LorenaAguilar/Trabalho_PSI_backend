@@ -30,12 +30,15 @@ namespace SSG_API.Business
 
             select new 
             {
-                nomeCompletp = p.User.NomeCompleto,
+                nomeCompleto = p.User.NomeCompleto,
                 foto = p.User.LinkFoto,
-                categoriaServico = s.DescricaoServico,
+                categoriaServico = s.Nome,
                 cidade = l.Cidade,
                 preco = sp.Preco,
-                biografia = p.Biografia
+                biografia = p.Biografia,
+                prestador = p.Id,
+                servico = s.Id,
+                servicoprestado = sp.Id
             }
             ).ToList<object>();
 

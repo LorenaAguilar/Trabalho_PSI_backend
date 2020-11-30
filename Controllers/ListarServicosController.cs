@@ -11,7 +11,6 @@ namespace SSG_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize("Bearer")]
     public class ListarServicosController : ControllerBase
     {
         private readonly ListarServicosService _listarServicosService;
@@ -22,6 +21,7 @@ namespace SSG_API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<object> Get()
         {
             var results = _listarServicosService.List();
